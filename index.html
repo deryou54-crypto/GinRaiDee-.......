@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GinRaiDee — คู่มืออาหารสุขภาพ</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&family=Mitr:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-brand">
+      <div class="logo-icon">🥗</div>
+      <span>GinRaiDee</span>
+      <span style="font-size:0.72rem;font-weight:300;color:var(--gray);margin-left:0.2rem">คู่มืออาหารสุขภาพ</span>
+    </div>
+    <div class="nav-actions">
+      <div id="user-status-container" class="user-status-container"></div>
+      <label class="theme-switch" for="theme-toggle">
+        <input type="checkbox" id="theme-toggle">
+        <span class="slider">
+          <span class="slider-icon sun">☀️</span>
+          <span class="slider-icon moon">🌙</span>
+        </span>
+      </label>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero-banner">
+    <div class="hero-title">กินอะไรดี?</div>
+    <p class="hero-sub">ค้นหาข้อมูลโภชนาการกับโรคและอาหารของคุณที่นี่<br>เพื่อสุขภาพที่ดีขึ้นในทุก ๆ วัน</p>
+  </div>
+
+  <!-- MAIN SEARCH CARD -->
+  <div class="search-section">
+    <div class="search-card fade-up">
+      <div class="search-card-header">
+        <span>🔍</span>
+        <h2>ค้นหาอาหารที่เหมาะกับคุณ</h2>
+        <span class="hint">เลือกอาการ หรือโรคประจำตัว</span>
+      </div>
+      <div class="search-body">
+
+        <!-- LEFT: Symptoms -->
+        <div>
+          <div class="col-title-row">
+            <div class="col-title">🤒 มีอาการ...</div>
+            <button class="clear-btn" onclick="clearSymptoms()" title="ล้างการเลือกทั้งหมด">✕ ล้าง</button>
+          </div>
+          <div class="symptom-grid">
+            <button class="symptom-btn" data-sym="ปวดหัว" onclick="toggleSymptom(this)">
+              <span class="s-icon">🤕</span><span>ปวดหัว</span>
+            </button>
+            <button class="symptom-btn" data-sym="ลำไส้แปรปรวน" onclick="toggleSymptom(this)">
+              <span class="s-icon">🤢</span><span>ลำไส้แปรปรวน</span>
+            </button>
+            <button class="symptom-btn" data-sym="ปวดท้อง" onclick="toggleSymptom(this)">
+              <span class="s-icon">😣</span><span>ปวดท้อง</span>
+            </button>
+            <button class="symptom-btn" data-sym="กินได้น้อย" onclick="toggleSymptom(this)">
+              <span class="s-icon">😔</span><span>กินได้น้อย</span>
+            </button>
+            <button class="symptom-btn" data-sym="อ่อนเพลีย" onclick="toggleSymptom(this)">
+              <span class="s-icon">😴</span><span>อ่อนเพลีย</span>
+            </button>
+            <button class="symptom-btn" data-sym="มีอื่น ๆ" onclick="toggleSymptom(this)">
+              <span class="s-icon">❓</span><span>มีอื่น ๆ</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- OR -->
+        <div class="or-divider">
+          <div class="or-line"></div>
+          <div class="or-text">หรือ</div>
+          <div class="or-line"></div>
+        </div>
+
+        <!-- RIGHT: Disease -->
+        <div class="disease-col">
+          <div class="col-title-row">
+            <div class="col-title">🏥 มีโรคประจำตัว...</div>
+            <button class="clear-btn" onclick="clearDiseases()" title="ล้างการเลือกทั้งหมด">✕ ล้าง</button>
+          </div>
+
+          <div class="disease-tags" id="disease-tags">
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="เบาหวาน">เบาหวาน</div>
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="ความดันโลหิตสูง">ความดันโลหิตสูง</div>
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="ไขมันสูง">ไขมันสูง</div>
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="โรคไต">โรคไต</div>
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="โรคหัวใจ">โรคหัวใจ</div>
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="ภูมิแพ้กลูเตน">ภูมิแพ้กลูเตน</div>
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="แพ้นม">แพ้นม / แลคโตส</div>
+            <div class="d-tag" onclick="toggleDiseaseTag(this)" data-d="ไม่มีโรค">ไม่มีโรคประจำตัว</div>
+          </div>
+
+          <button class="search-btn" onclick="doSearch()">
+            🔍 เริ่มค้นหาอาหาร
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT PANEL -->
+  <div id="result-panel" style="max-width:1000px;margin:0 auto 1rem;padding:0 1.5rem;">
+    <div id="result-inner"
+      style="background:linear-gradient(135deg,#fff8e8,#fff3d8);border:1.5px solid #f5c97a;border-radius:14px;padding:1.2rem 1.5rem;">
+    </div>
+  </div>
+
+  <!-- HEALTH CALCULATOR & CALORIE PLANNER SECTION -->
+  <div class="search-section" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 2rem;">
+    
+    <!-- BMI, BMR & TDEE CALCULATOR CARD -->
+    <div class="bmi-card fade-up">
+      <div class="bmi-card-header">
+        <span>🧮</span>
+        <h2>วิเคราะห์ร่างกายและระดับพลังงาน (BMI / BMR / TDEE)</h2>
+        <span class="hint">กรอกข้อมูลร่างกายเพื่อคำนวณ</span>
+      </div>
+      <div class="bmi-body">
+        <!-- Left Column: Inputs -->
+        <div class="bmi-inputs-col">
+          <!-- Gender Select -->
+          <div class="bmi-input-group">
+            <label style="font-family: 'Mitr', sans-serif; font-size: 0.95rem; font-weight: 500; color: var(--green-dark);">เพศ</label>
+            <div class="gender-selection">
+              <button type="button" class="gender-btn active" id="gender-male" onclick="setGender('male')">
+                <span>👨</span> ชาย
+              </button>
+              <button type="button" class="gender-btn" id="gender-female" onclick="setGender('female')">
+                <span>👩</span> หญิง
+              </button>
+            </div>
+          </div>
+          
+          <!-- Age Input -->
+          <div class="bmi-input-group">
+            <div class="bmi-input-label-row">
+              <label for="input-age">อายุ</label>
+              <div class="bmi-number-wrapper">
+                <input type="number" id="input-age" class="bmi-num-input" value="25" min="15" max="70" oninput="syncAgeSlider()">
+                <span class="unit">ปี</span>
+              </div>
+            </div>
+            <input type="range" id="slider-age" class="bmi-slider" min="15" max="70" value="25" oninput="syncAgeInput()">
+          </div>
+          
+          <!-- Height Input -->
+          <div class="bmi-input-group">
+            <div class="bmi-input-label-row">
+              <label for="input-height">ส่วนสูง</label>
+              <div class="bmi-number-wrapper">
+                <input type="number" id="input-height" class="bmi-num-input" value="170" min="100" max="220" oninput="syncHeightSlider()">
+                <span class="unit">ซม.</span>
+              </div>
+            </div>
+            <input type="range" id="slider-height" class="bmi-slider" min="100" max="220" value="170" oninput="syncHeightInput()">
+          </div>
+          
+          <!-- Weight Input -->
+          <div class="bmi-input-group">
+            <div class="bmi-input-label-row">
+              <label for="input-weight">น้ำหนัก</label>
+              <div class="bmi-number-wrapper">
+                <input type="number" id="input-weight" class="bmi-num-input" value="65" min="30" max="180" oninput="syncWeightSlider()">
+                <span class="unit">กก.</span>
+              </div>
+            </div>
+            <input type="range" id="slider-weight" class="bmi-slider" min="30" max="180" value="65" oninput="syncWeightInput()">
+          </div>
+
+          <!-- Activity Level Select -->
+          <div class="bmi-input-group">
+            <label for="select-activity" style="font-family: 'Mitr', sans-serif; font-size: 0.95rem; font-weight: 500; color: var(--green-dark);">กิจกรรมประจำวัน</label>
+            <div class="disease-select-wrap">
+              <select id="select-activity" class="disease-select" onchange="calculateAll()">
+                <option value="1.2">นั่งทำงานอยู่กับที่ ไม่ค่อยออกกำลังกาย (1.2)</option>
+                <option value="1.375">ออกกำลังกายเบา ๆ 1-3 วัน/สัปดาห์ (1.375)</option>
+                <option value="1.55">ออกกำลังกายปานกลาง 3-5 วัน/สัปดาห์ (1.55)</option>
+                <option value="1.725">ออกกำลังกายหนัก 6-7 วัน/สัปดาห์ (1.725)</option>
+                <option value="1.9">ออกกำลังกายหนักมาก/นักกีฬา (1.9)</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+          </div>
+
+          <!-- Goal Select -->
+          <div class="bmi-input-group">
+            <label for="select-goal" style="font-family: 'Mitr', sans-serif; font-size: 0.95rem; font-weight: 500; color: var(--green-dark);">เป้าหมายสุขภาพ</label>
+            <div class="disease-select-wrap">
+              <select id="select-goal" class="disease-select" onchange="calculateAll()">
+                <option value="maintain">คงน้ำหนักตัวเดิม</option>
+                <option value="lose">ลดน้ำหนัก / ลดไขมัน (-15%)</option>
+                <option value="gain">เพิ่มกล้ามเนื้อ / เพิ่มน้ำหนัก (+15%)</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+          </div>
+
+          <button type="button" class="bmi-btn active" onclick="calculateAll()">
+            📊 คำนวณและประมวลผลสุขภาพ
+          </button>
+        </div>
+
+        <!-- Right Column: Results -->
+        <div class="bmi-results-col">
+          <!-- BMI Score -->
+          <div class="bmi-result-summary">
+            <div class="bmi-score-container">
+              <span class="bmi-score-label">ดัชนีมวลกาย (BMI)</span>
+              <span class="bmi-value-text" id="bmi-score">22.5</span>
+            </div>
+            <div class="bmi-category-container">
+              <span class="bmi-category-label">เกณฑ์สุขภาพ</span>
+              <span class="bmi-badge green" id="bmi-badge">น้ำหนักปกติ</span>
+            </div>
+          </div>
+
+          <!-- BMI Gauge -->
+          <div class="bmi-gauge-wrapper">
+            <div class="bmi-gauge-bar">
+              <div class="gauge-segment underweight" style="width: 14%;" title="ผอม / น้ำหนักน้อย (< 18.5)"></div>
+              <div class="gauge-segment normal" style="width: 18%;" title="น้ำหนักปกติ (18.5 - 22.9)"></div>
+              <div class="gauge-segment overweight" style="width: 8%;" title="น้ำหนักเกิน / ท้วม (23.0 - 24.9)"></div>
+              <div class="gauge-segment obese1" style="width: 20%;" title="อ้วนระดับ 1 (25.0 - 29.9)"></div>
+              <div class="gauge-segment obese2" style="width: 40%;" title="อ้วนระดับ 2 / อ้วนอันตราย (>= 30.0)"></div>
+              <div class="bmi-pointer" id="bmi-pointer" style="left: 30%;">
+                <div class="pointer-label" id="pointer-label">22.5</div>
+                <div class="pointer-arrow"></div>
+              </div>
+            </div>
+            <div class="bmi-gauge-labels">
+              <span>15</span>
+              <span>18.5</span>
+              <span>23</span>
+              <span>25</span>
+              <span>30</span>
+              <span>40</span>
+            </div>
+          </div>
+
+          <!-- BMI Advice -->
+          <div class="bmi-advice-card green" id="bmi-advice-card">
+            <div class="advice-title" id="bmi-advice-title">น้ำหนักปกติ (สุขภาพดี)</div>
+            <div class="advice-content" id="bmi-advice-content">
+              คุณมีน้ำหนักตัวที่สมดุลและปลอดภัย ควรเน้นการรับประทานอาหารที่มีคุณค่าทางโภชนาการสูงและออกกำลังกายอย่างสม่ำเสมอเพื่อรักษาสุขภาพที่ดีในระยะยาว
+            </div>
+          </div>
+
+          <!-- BMR & TDEE Results -->
+          <div class="energy-results-row">
+            <div class="energy-box">
+              <span class="energy-label">BMR (พลังงานพื้นฐาน)</span>
+              <div>
+                <span class="energy-value-text" id="bmr-val">1,567</span>
+                <span class="energy-unit">kcal</span>
+              </div>
+            </div>
+            <div class="energy-box">
+              <span class="energy-label">TDEE (พลังงานที่ใช้จริง)</span>
+              <div>
+                <span class="energy-value-text" id="tdee-val">1,881</span>
+                <span class="energy-unit">kcal</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Button to apply to calorie planner -->
+          <button type="button" class="tdee-goal-btn" onclick="applyCalorieGoal()">
+            🎯 ตั้งค่าแคลอรี่เป้าหมาย (<span id="target-kcal-text">1,881</span> kcal)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY CALORIE & NUTRIENT PLANNER CARD -->
+    <div class="calorie-card fade-up" id="calorie-planner">
+      <div class="calorie-card-header">
+        <span>🍎</span>
+        <h2>เครื่องวางแผนอาหารและแคลอรี่รายวัน (Calorie & Nutrition Planner)</h2>
+        <span class="hint">เลือกเมนูอาหารเพื่อคำนวณโภชนาการ</span>
+      </div>
+      <div class="calorie-body">
+        <!-- Left Column: Goal & Summary -->
+        <div class="calorie-summary-col">
+          <!-- Target Goal Input -->
+          <div class="calorie-goal-input-group">
+            <label for="calorie-goal">เป้าหมายแคลอรี่ของคุณ</label>
+            <div class="goal-input-wrapper">
+              <input type="number" id="calorie-goal" class="calorie-num-input" value="1881" min="500" max="10000" oninput="updateCalorieProgress()">
+              <span class="unit">แคลอรี่ (kcal)</span>
+            </div>
+          </div>
+
+          <!-- Calorie Progress -->
+          <div class="calorie-progress-container">
+            <div class="progress-labels">
+              <span>ทานแล้ว: <span id="calories-consumed" class="total-kcal-text">0</span> kcal</span>
+              <span>เป้าหมาย: <span id="calories-target-display">1,881</span> kcal</span>
+            </div>
+            <div class="calorie-progress-bar-bg">
+              <div class="calorie-progress-fill" id="calorie-progress-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+
+          <!-- Calorie Status Box -->
+          <div class="calorie-status-box info" id="calorie-status-box">
+            <span class="status-icon">💡</span>
+            <span id="calorie-status-text">คลิกปุ่ม ➕ เพิ่มในแผนวันนี้ บนเมนูอาหารด้านล่าง เพื่อวางแผนโภชนาการประจำวัน</span>
+          </div>
+
+          <!-- Nutrient Graph (Donut Chart & Macro Bars) -->
+          <div class="nutrient-graph-card">
+            <div class="nutrient-graph-title">สัดส่วนสารอาหารหลักวันนี้ (Macronutrients)</div>
+            <div class="nutrient-graph-body">
+              <!-- Donut SVG -->
+              <div class="donut-chart-container">
+                <svg width="120" height="120" viewBox="0 0 42 42" class="donut-svg" style="transform: rotate(-90deg);">
+                  <circle class="donut-hole" cx="21" cy="21" r="15.915" fill="transparent"></circle>
+                  <circle class="donut-ring" cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--gray-light)" stroke-width="4.2"></circle>
+                  
+                  <!-- Carbs segment (orange) -->
+                  <circle id="donut-carbs" cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--orange)" stroke-width="4.2" stroke-dasharray="0 100" stroke-dashoffset="100" class="donut-segment"></circle>
+                  
+                  <!-- Protein segment (blue) -->
+                  <circle id="donut-protein" cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--blue)" stroke-width="4.2" stroke-dasharray="0 100" stroke-dashoffset="100" class="donut-segment"></circle>
+                  
+                  <!-- Fats segment (yellow/gold) -->
+                  <circle id="donut-fats" cx="21" cy="21" r="15.915" fill="transparent" stroke="#eab308" stroke-width="4.2" stroke-dasharray="0 100" stroke-dashoffset="100" class="donut-segment"></circle>
+                </svg>
+                <div class="donut-legend">
+                  <div class="legend-item"><span class="legend-dot carbs"></span>คาร์บ</div>
+                  <div class="legend-item"><span class="legend-dot protein"></span>โปรตีน</div>
+                  <div class="legend-item"><span class="legend-dot fats"></span>ไขมัน</div>
+                </div>
+              </div>
+
+              <!-- Macro Bars -->
+              <div class="macro-bars-container">
+                <!-- Protein Bar -->
+                <div class="macro-progress-row">
+                  <div class="macro-label-row">
+                    <span class="macro-label-name">🥩 โปรตีน</span>
+                    <span class="macro-label-value" id="macro-protein-val">0g</span>
+                  </div>
+                  <div class="macro-bar-bg">
+                    <div class="macro-bar-fill protein" id="macro-protein-bar" style="width: 0%;"></div>
+                  </div>
+                </div>
+                <!-- Carbs Bar -->
+                <div class="macro-progress-row">
+                  <div class="macro-label-row">
+                    <span class="macro-label-name">🍚 คาร์บ</span>
+                    <span class="macro-label-value" id="macro-carbs-val">0g</span>
+                  </div>
+                  <div class="macro-bar-bg">
+                    <div class="macro-bar-fill carbs" id="macro-carbs-bar" style="width: 0%;"></div>
+                  </div>
+                </div>
+                <!-- Fats Bar -->
+                <div class="macro-progress-row">
+                  <div class="macro-label-row">
+                    <span class="macro-label-name">🥑 ไขมัน</span>
+                    <span class="macro-label-value" id="macro-fats-val">0g</span>
+                  </div>
+                  <div class="macro-bar-bg">
+                    <div class="macro-bar-fill fats" id="macro-fats-bar" style="width: 0%;"></div>
+                  </div>
+                </div>
+                <!-- Sugar Bar -->
+                <div class="macro-progress-row">
+                  <div class="macro-label-row">
+                    <span class="macro-label-name">🍬 น้ำตาล</span>
+                    <span class="macro-label-value" id="macro-sugar-val">0g</span>
+                  </div>
+                  <div class="macro-bar-bg">
+                    <div class="macro-bar-fill sugar" id="macro-sugar-bar" style="width: 0%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Selected Foods List -->
+        <div class="calorie-list-col">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span class="list-title">📋 รายการอาหารในแผนวันนี้</span>
+            <button class="clear-selected-btn" onclick="clearSelectedFoods()">✕ ล้างทั้งหมด</button>
+          </div>
+          <div class="selected-food-list" id="selected-food-list">
+            <div class="empty-list-msg">ยังไม่ได้เลือกอาหารในวันนี้</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- DAILY MENU -->
+  <div class="daily-section fade-up" id="daily">
+    <div class="section-header">
+      <span style="font-size:1.5rem">🍽️</span>
+      <h2>เมนูแนะนำประจำวัน</h2>
+      <div class="date-badge" id="today-date">วันนี้</div>
+    </div>
+
+    <div class="tip-strip">
+      <span class="tip-icon">💡</span>
+      <span><strong>เคล็ดลับ:</strong> ควรรับประทานอาหารครบ 5 หมู่ กินผักผลไม้ให้หลากสี และดื่มน้ำอย่างน้อย 8
+        แก้วต่อวัน</span>
+    </div>
+
+    <div class="meal-tabs" id="meal-tabs">
+      <span class="tab-slider" id="tab-slider"></span>
+      <button class="meal-tab active" onclick="switchMeal('morning',this)">🌅 เช้า</button>
+      <button class="meal-tab" onclick="switchMeal('noon',this)">☀️ กลางวัน</button>
+      <button class="meal-tab" onclick="switchMeal('evening',this)">🌙 เย็น</button>
+      <button class="meal-tab" onclick="switchMeal('snack',this)">🍎 ของว่าง</button>
+    </div>
+
+    <div class="food-grid" id="food-grid"></div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal-overlay" id="login-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>🔑 เข้าสู่ระบบ</h3>
+        <button class="close-modal-btn" onclick="closeLoginModal()">✕</button>
+      </div>
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="first-name">ชื่อ (First Name)</label>
+          <input type="text" id="first-name" placeholder="ระบุชื่อของคุณ" required>
+        </div>
+        <div class="form-group">
+          <label for="last-name">นามสกุล (Last Name)</label>
+          <input type="text" id="last-name" placeholder="ระบุนามสกุลของคุณ" required>
+        </div>
+        <button type="submit" class="submit-login-btn">เข้าสู่ระบบ</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+
+</html>
